@@ -2,26 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MessageController : MonoBehaviour
 {
-    public TextMeshProUGUI message;
+    public static GameObject messageBox;
+    public static GameObject notice;
+    private static GameObject currentMessageBox; // 记录当前的消息框对象
 
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        
+        messageBox = Resources.Load<GameObject>("Prefab/MessageBox");
+        notice = GameObject.Find("Canvas/notice");
+        Debug.Log(messageBox);
+        Debug.Log(notice);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void showMessage(string message,GameObject position)
+    public static void ShowMessage(string str, Vector3 pos, float duration = 3f)
     {
-        this.message.text = message;
-        //GameObject instance = Instantiate(this, position.transform.position, position.transform.rotation, position.transform);
+        GameObject instant = Instantiate(messageBox, pos, Quaternion.identity);
+
+        instant.transform.SetParent(notice.transform);
+        TextMeshProUGUI message = instant.transform.Find("back/text").GetComponent<TextMeshProUGUI>();
+
+        if (message != null)
+        {
+            message.text = str;
+            instant.SetActive(true);
+            currentMessageBox = instant;
+            Debug.Log(message.text);
+        }
+        else
+        {
+            Debug.LogError("Unable to find the 'Text' component in the message box.");
+        }
+    }
+
+    public static void HideMessage()
+    {
+        if (currentMessageBox != null)
+        {
+            currentMessageBox.SetActive(false);
+        }
+    }
+
+    public void OnConfirmButtonClicked()
+    {
+        HideMessage();
     }
 }
