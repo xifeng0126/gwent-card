@@ -99,4 +99,9 @@ public class lobbyManager : MonoBehaviourPunCallbacks
     //{
     //    Debug.Log(message);
     //}
+    public  void OnPveClick()
+    {
+        PhotonNetwork.LoadLevel("Menu");
+        //SceneManager.LoadScene(4);
+    }
 }
