@@ -7,17 +7,14 @@ using UnityEngine.UI;
 public class MessageController : MonoBehaviour
 {
     public static GameObject messageBox;
-    public static GameObject notice;
-    private static GameObject currentMessageBox; // 记录当前的消息框对象
+    private static GameObject currentMessageBox; // 璁板綍褰撳墠鐨勬秷鎭瀵硅薄
 
 
 
     void Start()
     {
         messageBox = Resources.Load<GameObject>("Prefab/MessageBox");
-        notice = GameObject.Find("Canvas/notice");
         Debug.Log(messageBox);
-        Debug.Log(notice);
     }
 
     void Update()
@@ -25,11 +22,11 @@ public class MessageController : MonoBehaviour
 
     }
 
-    public static void ShowMessage(string str, Vector3 pos, float duration = 3f)
+    public static void ShowMessage(string str, GameObject pos, float duration = 3f)
     {
-        GameObject instant = Instantiate(messageBox, pos, Quaternion.identity);
+        GameObject instant = Instantiate(messageBox, pos.transform.position, Quaternion.identity);
 
-        instant.transform.SetParent(notice.transform);
+        instant.transform.SetParent(pos.transform);
         TextMeshProUGUI message = instant.transform.Find("back/text").GetComponent<TextMeshProUGUI>();
 
         if (message != null)
@@ -37,7 +34,7 @@ public class MessageController : MonoBehaviour
             message.text = str;
             instant.SetActive(true);
             currentMessageBox = instant;
-            Debug.Log(message.text);
+            //Debug.Log(message.text);
         }
         else
         {

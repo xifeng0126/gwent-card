@@ -18,6 +18,8 @@ public class CardListController : MonoBehaviour
     public TextMeshProUGUI Specialnum;
     public TextMeshProUGUI Basenum;
 
+    public GameObject notice;
+
     void Start()
     {
         setCardManager=this.GetComponent<setCardManager>();
@@ -288,10 +290,11 @@ public class CardListController : MonoBehaviour
         if (deck.isFull())
         {
             DBmanager.saveDeck(deck);
+            MessageController.ShowMessage("保存成功",notice);
         }
         else
         {
-
+            MessageController.ShowMessage("卡组不完整", notice);
         }
 
     }

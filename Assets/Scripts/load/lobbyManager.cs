@@ -37,7 +37,7 @@ public class lobbyManager : MonoBehaviourPunCallbacks
 
     public void onStartClick()
     {
-        Debug.Log("后续修改");
+        //Debug.Log("后续修改");
         if(!hasDeck)
         {
             //提示请先设置卡组
@@ -103,5 +103,9 @@ public class lobbyManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel("Menu");
         //SceneManager.LoadScene(4);
+    }
+    void OnApplicationQuit()
+    {
+        DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));
     }
 }
