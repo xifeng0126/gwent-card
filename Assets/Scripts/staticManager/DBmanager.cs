@@ -242,19 +242,19 @@ public class DBmanager
                 }
                 else if (login == 1)
                 {
-                    Debug.Log("用户已登录");
+                    //Debug.Log("用户已登录");
                     return -2;
                 }
                 else
                 {
-                    Debug.Log("未知错误");
+                    //Debug.Log("未知错误");
                     return -3;
                 }
 
             }
             else
             {
-                Debug.Log("用户名或密码错误");
+                //Debug.Log("用户名或密码错误");
                 return -1;
             }
         }
@@ -287,7 +287,7 @@ public class DBmanager
             int existingUserCount = Convert.ToInt32(checkUsernameCmd.ExecuteScalar());
             if (existingUserCount > 0)
             {
-                Debug.Log("用户名已存在");
+                //Debug.Log("用户名已存在");
                 conn.Close();
                 return false;
             }
@@ -306,10 +306,10 @@ public class DBmanager
 
             // 执行插入操作
             string insertSql = "INSERT INTO players  VALUES ('" + newUserId + "', '" + username + "', '" + password + "', '" + no_id + "', '" + nl_id + "', '" + mo_id + "', '" + so_id + "', '" + 0 + "')";
-            Debug.Log(insertSql);
+            //Debug.Log(insertSql);
             MySqlCommand insertCmd = new MySqlCommand(insertSql, conn);
             insertCmd.ExecuteReader();
-            Debug.Log("保存玩家信息成功");
+            //Debug.Log("保存玩家信息成功");
             conn.Close();
             return true;
         }
@@ -363,7 +363,7 @@ public class DBmanager
 
     public static void exitPlayer(int player_id)
     {
-        Debug.Log(player_id);
+        //Debug.Log(player_id);
         String connetStr = "server=127.0.0.1;port=3306;user=root;password=123456; database=gwentcard;charset=utf8;";
         MySqlConnection conn = new MySqlConnection(connetStr);
         conn.Open();

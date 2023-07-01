@@ -219,4 +219,9 @@ public class setCardManager : MonoBehaviour
     //        Debug.Log(card.name);
     //    }
     //}
+
+    void OnApplicationQuit()
+    {
+        DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));
+    }
 }

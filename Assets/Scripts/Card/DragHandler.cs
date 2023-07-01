@@ -2,11 +2,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
+using Unity.VisualScripting;
 
-public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler,IPointerExitHandler,IPointerEnterHandler
 {
     private RectTransform cardRectTransform;
-    private CanvasGroup canvasGroup;
     private Transform initialParent;
     private Vector2 initialPosition;
     private Vector2 offset;
@@ -14,14 +17,43 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     public GameObject MyGameImages;
     public GameObject OtherGameImages;
     public FightManager fightManager;
+    public SkillManager skillManager;
 
     Card card;
+    int position; // 123 456 从下到上
+
+
+    private Vector3 raisedPosition = new Vector3(0f, 10f, 0f); // 抬高的位置
+    private bool isHovering = false;
+
+
+    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
 
     private void Awake()
     {
         cardRectTransform = GetComponent<RectTransform>();
 
         card = GetComponent<MiniCardControl>().card;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Debug.Log(1);
+        if (!isHovering)
+        {
+            transform.position += raisedPosition;
+            isHovering = true;
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        Debug.Log(2);
+        if (isHovering)
+        {
+            transform.position -= raisedPosition;
+            isHovering = false;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -41,12 +73,14 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         
         if(card is BasicCard && card.skill1 != 3 && card.skill2 != 3 && card.skill1 != 11 && card.skill2 != 11)  //基本牌
         {
+            //Debug.Log(card.position);
             if(card.position== "close combat")
             {
                 highlightMyCloseAttacklist();
             }
             if(card.position== "remote attack")
             {
+                //Debug.Log("remote attack");
                 highlightMyRemoteAttackList();
             }
             if(card.position== "city attack")
@@ -55,7 +89,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             }
             if(card.position== "remote attack,close combat")
             {
-                highlightMyRemoteAttackList();
+                highlightMyCloseAttacklist();
                 highlightMyRemoteAttackList();
             }
         }
@@ -74,7 +108,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
                 hightlightOtherCityAttackList();
             }
         }
-        else if(card is SpecialCard && card.position == "weather")  //天气
+        else if(card is SpecialCard && card.position == "weather" && card.skill1!=9)  //天气
         {
             highlightWeather();
         }
@@ -83,6 +117,10 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             highlightMyCloseTrump();
             highlightMyRemoteTrump();
             highlightMyCityTrump();
+        }
+        else if (card is BasicCard && card.skill1 == 11)
+        {
+            highlightMyCloseAttacklist();
         }
     }
 
@@ -100,58 +138,272 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
-        // 遍历查找Horizontal Layout Group
+        //可放置牌
         HorizontalLayoutGroup targetLayoutGroup = null;
-
         for (int i = 0; i < results.Count; i++)
         {
             HorizontalLayoutGroup layoutGroup = results[i].gameObject.GetComponent<HorizontalLayoutGroup>();
             if (layoutGroup != null)
             {
-                //targetLayoutGroup = layoutGroup;
-                if (card is BasicCard && card.skill1 != 3 && card.skill2 != 3 && card.skill1 != 11 && card.skill2 != 11)  //基本牌
+                //基本牌
+                if (card is BasicCard && card.skill1 != 3 && card.skill2 != 3 && card.skill1 != 11 && card.skill2 != 11)  
                 {
                     if (card.position == "close combat")
                     {
                         if (results[i].gameObject.name == "closeAttackList")
                         {
+                            targetLayoutGroup = layoutGroup;
+                            position = 3;
 
+                            //skillManager.SameBrotherhood(card, position);
+                            //skillManager.BoostMorale(card, position);
+                            //int[] data= new int[3];
+                            //data[0] = fightManager.Myplayer_id;
+                            //data[1] = card.id;
+                            //data[2] = 4;
+                            //PhotonNetwork.RaiseEvent(FightManager.SameBrotherEventCode, data, raiseEventOptions, SendOptions.SendReliable);
                         }
                     }
                     if (card.position == "remote attack")
                     {
-                        
+                        if (results[i].gameObject.name == "remoteAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 2;
+
+                            //skillManager.SameBrotherhood(card, position);
+                            //skillManager.BoostMorale(card, position);
+                            //int[] data = new int[3];
+                            //data[0] = fightManager.Myplayer_id;
+                            //data[1] = card.id;
+                            //data[2] = 5;
+                            //PhotonNetwork.RaiseEvent(FightManager.SameBrotherEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+                        }
                     }
                     if (card.position == "city attack")
                     {
-                        
+                        if (results[i].gameObject.name == "cityAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 1;
+
+                            //skillManager.SameBrotherhood(card, position);
+                            //skillManager.BoostMorale(card, position);
+                            //int[] data = new int[3];
+                            //data[0] = fightManager.Myplayer_id;
+                            //data[1] = card.id;
+                            //data[2] = 6;
+                            //PhotonNetwork.RaiseEvent(FightManager.SameBrotherEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+                        }
                     }
                     if (card.position == "remote attack,close combat")
                     {
-                        
+                        if (results[i].gameObject.name == "closeAttackList" )
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 3;
+                        }
+                        if (results[i].gameObject.name == "remoteAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 2;
+                        }
                     }
                 }
-                else if (card is BasicCard && (card.skill1 == 3 || card.skill2 == 3))  //间谍
+                //间谍
+                else if (card is BasicCard && (card.skill1 == 3 || card.skill2 == 3))  
                 {
+                    if (card.position == "close combat")
+                    {
+                        if (results[i].gameObject.name == "otherCloseAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 4;
+                        }
+                    }
+                    if (card.position == "remote attack")
+                    {
+                        if (results[i].gameObject.name == "otherRemoteAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 5;
+                        }
+                    }
+                    if (card.position == "city attack")
+                    {
+                        if (results[i].gameObject.name == "otherCityAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 6;
+                        }
+                    }
 
                 }
-                else if (card is SpecialCard && card.position == "weather")  //天气
+                //天气
+                else if (card is SpecialCard && card.position == "weather")  
                 {
-
+                    if (results[i].gameObject.name == "weatherCards")
+                    {
+                        targetLayoutGroup = layoutGroup;
+                        position = 10;
+                    }
                 }
-                else if (card is SpecialCard && (card.skill1 == 11 || card.skill2 == 11))  //领导号角
+                //领导号角
+                else if (card is SpecialCard && (card.skill1 == 11 || card.skill2 == 11))  
                 {
-
+                    if (results[i].gameObject.name == "closeTrump")
+                    {
+                        targetLayoutGroup = layoutGroup;
+                        position = 9;
+                    }
+                    if (results[i].gameObject.name == "remoteTrump")
+                    {
+                        targetLayoutGroup = layoutGroup;
+                        position = 8;
+                    }
+                    if (results[i].gameObject.name == "cityTrump")
+                    {
+                        targetLayoutGroup = layoutGroup;
+                        position = 7;
+                    }
                 }
+                //丹德里恩
+                else if (card is BasicCard &&card.skill1 == 11)  
+                {
+                    if (card.position == "close combat")
+                    {
+                        if (results[i].gameObject.name == "closeAttackList")
+                        {
+                            targetLayoutGroup = layoutGroup;
+                            position = 3;
+                        }
+                    }
+                }
+                
                 break;
             }
         }
 
+        //诱饵
+        if (card.skill1 == 12)
+        {
+            //Debug.Log("诱饵");
+            for (int j = 0; j < results.Count; j++)
+            {
+                MiniCardControl miniCardControl = results[j].gameObject.GetComponent<MiniCardControl>();
+                DragHandler dragHandler = results[j].gameObject.GetComponent<DragHandler>();
+                if (miniCardControl != null && dragHandler == null && miniCardControl.card.skill1 != 1)  //在场上的牌且不是英雄牌
+                {
+                    fightManager.MyHandCardList.Add(miniCardControl.card);
+                    //fightManager.MyHandCardList.Remove(card);
+                    //fightManager.MyDiscardList.Add(card);
+                    //Destroy(this.gameObject);
+                    //fightManager.showHandCard();
+
+                    int[] data1 = new int[3];
+                    data1[0] = fightManager.Myplayer_id;
+                    data1[1] = 1;   //1表示诱饵
+                    data1[2] = miniCardControl.card.id;
+                    PhotonNetwork.RaiseEvent(FightManager.RemoveCardEventCode,data1, raiseEventOptions, SendOptions.SendReliable);
+                    //Debug.Log(results[j].gameObject.GetInstanceID());
+                    //PhotonNetwork.Destroy(results[j].gameObject);
+
+                    int[] data = new int[2];
+                    data[0] = fightManager.Myplayer_id;
+                    data[1] = card.id;
+                    PhotonNetwork.RaiseEvent(FightManager.PutSkillCardsEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+
+                    Debug.Log(miniCardControl.attackNum);
+                    Destroy(this.gameObject);
+                    //Debug.Log("dragdis");
+                    fightManager.showHandCard();
+                    fightManager.CalculateAttackNum();
+
+                    PhotonNetwork.RaiseEvent(FightManager.ClearAttackEventCode, 1, raiseEventOptions, SendOptions.SendReliable);
+                    return;
+                }
+            }
+        }
+        //天晴
+        if(card.skill1==9)
+        {
+            bool flag = true;
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (results[i].gameObject.name == "MyHandCards")
+                {
+                    flag = false;
+                }
+            }
+            if (flag == true)
+            {
+                int[] data=new int[2];
+                data[0] = fightManager.Myplayer_id;
+                data[1] = card.id;
+                PhotonNetwork.RaiseEvent(FightManager.PutSkillCardsEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+                return;
+            }
+        }
+        //灼烧
+        if(card .skill1==10||card.skill2==10)
+        {
+            bool flag = true;
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (results[i].gameObject.name == "MyHandCards")
+                {
+                    flag = false;
+                }
+            }
+            if (flag == true)
+            {
+                int[] data = new int[2];
+                data[0] = fightManager.Myplayer_id;
+                data[1] = card.id;
+                PhotonNetwork.RaiseEvent(FightManager.PutSkillCardsEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+                return;
+            }
+        }
+
+
         if (targetLayoutGroup != null)
         {
+
             // 将卡牌的父级Transform设置为目标Horizontal Layout Group的Transform
             transform.SetParent(targetLayoutGroup.transform, false);
             LayoutRebuilder.ForceRebuildLayoutImmediate(targetLayoutGroup.GetComponent<RectTransform>());
+
+            int[] data=new int[4];
+            data[0] = fightManager.Myplayer_id;
+            data[1] = card.id;
+            data[2] = position;
+            data[3] = 1;  //1表示由玩家放置
+            
+            PhotonNetwork.RaiseEvent(FightManager.PutCardsEventCode, data, raiseEventOptions, SendOptions.SendReliable);
+
+            //fightManager.MyHandCardList.Remove(card);
+            fightManager.tableCards.Add(this.gameObject);
+            //this.AddComponent<Image>();
+
+            if (card is BasicCard && (card.skill1 == 3 || card.skill2 == 3))
+            {
+                //从MygameCards中抽2张牌
+                for (int j = 0; j < 2; j++)
+                {
+                    int index = UnityEngine.Random.Range(0, fightManager.MygameCards.Count);
+                    fightManager.MyHandCardList.Add(fightManager.MygameCards[index]);
+
+                    int[] data1 = new int[2];
+                    data1[0] = fightManager.Myplayer_id;
+                    data1[1] = fightManager.MygameCards[index].id;
+                    PhotonNetwork.RaiseEvent(FightManager.DrawCardEventCode, data1, raiseEventOptions, SendOptions.SendReliable);
+
+                    fightManager.MygameCards.RemoveAt(index);
+                }
+            }
+
+            fightManager.CalculateAttackNum();
+            Destroy(GetComponent<DragHandler>());
         }
         else
         {
@@ -161,23 +413,17 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
             LayoutRebuilder.ForceRebuildLayoutImmediate(initialParent.GetComponent<RectTransform>());
         }
 
-
-
-        // 在此处执行卡牌释放的逻辑
-        // ...
-        
-        
-
+        fightManager.showHandCard();
         fightManager.CalculateAttackNum();
-        //Destroy(GetComponent<DragHandler>());
     }
 
 
-    public void SetGamePanel(GameObject myPanel,GameObject otherPanel,FightManager fightManager)
+    public void SetGamePanel(GameObject myPanel,GameObject otherPanel,FightManager fightManager,SkillManager skillManager)
     {
         MyGameImages = myPanel;
         OtherGameImages = otherPanel;
         this.fightManager = fightManager;
+        this.skillManager = skillManager;
     }
 
 
@@ -263,7 +509,6 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         fightManager.GamePanel.transform.Find("weatherCards").GetComponent<Image>().color = new Color(255, 255, 255, 0);
     }
-
     public void reduceAll()
     {
         reducelightMyCloseAttacklist();
@@ -277,4 +522,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
         reducelightOtherCityAttackList();
         reducelightWeather();
     }
+
+
+    
 }

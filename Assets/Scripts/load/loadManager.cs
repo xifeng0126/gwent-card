@@ -13,7 +13,7 @@ public class loadManager : MonoBehaviourPunCallbacks
     public GameObject SignUp;
     static bool flag = false;
     //public GameObject Lobby;
-
+    public GameObject notice;
 
 
     // Start is called before the first frame update
@@ -38,22 +38,22 @@ public class loadManager : MonoBehaviourPunCallbacks
         if (userId >= 0)
         {
             //显示消息登录成功
-            MessageController.ShowMessage("登录成功！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("登录成功！", notice);
             PhotonNetwork.AuthValues = new AuthenticationValues(userId.ToString());
             PhotonNetwork.ConnectUsingSettings();
         }
         else if (userId == -1)
         {
-            MessageController.ShowMessage("用户或密码错误！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("用户或密码错误！", notice);
         }
         else if (userId == -2)
         {
-            MessageController.ShowMessage("该用户已登录！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("该用户已登录！", notice );
         }
         else if (userId == -3)
         {
 
-            MessageController.ShowMessage("数据库发生未知错误！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("数据库发生未知错误！", notice);
 
         }
         else
@@ -66,12 +66,12 @@ public class loadManager : MonoBehaviourPunCallbacks
         string password = SignUp.transform.Find("password").GetComponent<TMP_InputField>().text;
         if (DBmanager.savePlayer(username, password))
         {
-            MessageController.ShowMessage("注册成功，请重新登录！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("注册成功，请重新登录！", notice);
             OnSettingBtnClick();
         }
         else
         {
-            MessageController.ShowMessage("注册失败,用户名可能已存在！", new Vector3(860, 500, 0));
+            MessageController.ShowMessage("注册失败,用户名可能已存在！", notice);
 
         }
     }
@@ -81,7 +81,7 @@ public class loadManager : MonoBehaviourPunCallbacks
         if (!flag)
         {
             TextMeshProUGUI btntext = GameObject.Find("Canvas/settingBtn/text").GetComponent<TextMeshProUGUI>();
-            Debug.Log(btntext);
+            //Debug.Log(btntext);
             btntext.text = "登录";
             SignUp.SetActive(true);
             SignIn.SetActive(false);
@@ -90,7 +90,7 @@ public class loadManager : MonoBehaviourPunCallbacks
         else
         {
             TextMeshProUGUI btntext = GameObject.Find("Canvas/settingBtn/text").GetComponent<TextMeshProUGUI>();
-            Debug.Log(btntext);
+            //Debug.Log(btntext);
             btntext.text = "注册";
             SignUp.SetActive(false);
             SignIn.SetActive(true);
