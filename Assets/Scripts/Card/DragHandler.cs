@@ -38,7 +38,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log(1);
+        //Debug.Log(1);
         if (!isHovering)
         {
             transform.position += raisedPosition;
@@ -48,7 +48,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log(2);
+        //Debug.Log(2);
         if (isHovering)
         {
             transform.position -= raisedPosition;

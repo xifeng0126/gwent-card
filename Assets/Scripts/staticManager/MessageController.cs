@@ -14,7 +14,7 @@ public class MessageController : MonoBehaviour
     void Start()
     {
         messageBox = Resources.Load<GameObject>("Prefab/MessageBox");
-        Debug.Log(messageBox);
+        //Debug.Log(messageBox);
     }
 
     void Update()

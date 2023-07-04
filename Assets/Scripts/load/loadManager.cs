@@ -14,6 +14,7 @@ public class loadManager : MonoBehaviourPunCallbacks
     static bool flag = false;
     //public GameObject Lobby;
     public GameObject notice;
+    //public GameObject miusic;
 
 
     // Start is called before the first frame update
@@ -22,6 +23,7 @@ public class loadManager : MonoBehaviourPunCallbacks
         //Lobby.SetActive(false);
         SignIn.SetActive(true);
         SignUp.SetActive(false);
+       // miusic.GetComponent<AudioManager>().PlayAudio();
     }
 
     // Update is called once per frame
