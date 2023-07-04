@@ -973,7 +973,6 @@ public class FightManager : MonoBehaviour, IOnEventCallback
 
     public void showRound()
     {
-        //Debug.Log("showRound");
         if (Myplayer_id == gameflag)
         {
             roundPanel.SetActive(true);
@@ -996,7 +995,6 @@ public class FightManager : MonoBehaviour, IOnEventCallback
             setHandcardDisabled();
             GamePanel.transform.Find("giveupBtn").gameObject.SetActive(false);
         }
-        //showHandCard();
         CalculateAttackNum();
     }
     public void changeGameFlag()
