@@ -407,6 +407,7 @@ public class FightManager : MonoBehaviour, IOnEventCallback
                 }
                 
             }
+            //setHandcardDisabled();
 
             //处理医生
             if (card.skill1 == 5 || card.skill2 == 5)
@@ -444,6 +445,10 @@ public class FightManager : MonoBehaviour, IOnEventCallback
                             });
                         }
                     });
+                }
+                else
+                {
+                    setHandcardEnabled();
                 }
                     
             }
@@ -924,6 +929,11 @@ public class FightManager : MonoBehaviour, IOnEventCallback
         {
             instanceMiniCard(card, GamePanel.transform.Find("MyHandCards").transform);
         }
+        if (gameflag == Myplayer_id)
+            setHandcardEnabled();
+        else
+            setHandcardDisabled();
+
         //GameObject.Find("MyGameImages/AllNum/handCardNum").GetComponent<TextMeshProUGUI>().text = MyHandCardList.Count.ToString();
         //Debug.Log(MyHandCardList.Count);
         myBack.GetComponent<cardBackControl>().setCardNum(MygameCards.Count);
@@ -1118,6 +1128,7 @@ public class FightManager : MonoBehaviour, IOnEventCallback
     }
     public void setHandcardEnabled()
     {
+        Debug.Log("setHandcardEnabled");
         foreach (Transform child in GamePanel.transform.Find("MyHandCards").transform)
         {
             child.GetComponent<DragHandler>().enabled = true;
