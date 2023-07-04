@@ -130,8 +130,8 @@ public class DeckController : MonoBehaviour
         return returned_list;
     }
 
-    //----------------------------------AiCard Fetching--------------------------------------//
-    // cards_list: Source list | faction: AiCard faction | row: close/range/siege
+    //----------------------------------AIcard 卡片获取--------------------------------------//
+    // cards_list: 源列表 | faction: AiCard faction | row: close/range/siege
     public List<AiCard> GetUnitCards(List<AiCard> cards_list, string faction = "all", string row = "all", bool getUnique = false)
     {
         List<AiCard> returned_list = new List<AiCard>();
@@ -139,7 +139,7 @@ public class DeckController : MonoBehaviour
         bool isUnique;
         switch (faction)
         {
-            case "all": // Return all unit cards
+            case "all": //返回所有卡
                 foreach (AiCard card in cards_list)
                 {
                     if (row == "all")
@@ -290,11 +290,11 @@ public class DeckController : MonoBehaviour
         public string _idstr = null;
         public string name = null;
         public int _id = -1;
-        public string faction = null;
-        public bool unique = false;
-        public int strength = 0;
-        public string row = null;
-        public string ability = null;
+        public string faction = null;//阵营
+        public bool unique = false;//是否英雄
+        public int strength = 0;//战力
+        public string row = null;//位置
+        public string ability = null;//技能
     }
 
     // List of above AiCard
@@ -306,7 +306,7 @@ public class DeckController : MonoBehaviour
     // AiDeck Structure
     public class AiDeck
     {
-        // Usage Example:
+        // 使用例子:
         //
         //AiDeck deck = new AiDeck
         //{
@@ -503,7 +503,7 @@ public class DeckController : MonoBehaviour
         string json = JsonUtility.ToJson(deck);
         //Debug.Log(json);
         File.WriteAllText(file_path, json);
-        Debug.Log("AiDeck saved correctly under: " + file_path);
+        Debug.Log("牌组配置文件被存储在: " + file_path);
     }
 
     public bool IsDeckValid(AiDeck deck)
@@ -519,7 +519,7 @@ public class DeckController : MonoBehaviour
         return isValid;
     }
 
-    //--------To Main Menu
+    //回到人机主菜单
     public void ToMainMenu()
     {
         SceneManager.LoadScene(4);

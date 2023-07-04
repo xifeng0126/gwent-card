@@ -38,7 +38,7 @@ public class CCardManager : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Detect AiCard Right Click
+        // 右键显示详细信息
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             ShowBigCard();
@@ -48,48 +48,58 @@ public class CCardManager : MonoBehaviour, IPointerClickHandler
         {
             if ((lastClick + interval) > Time.time)
             {
-                // Double Click
+                // 双击
                 CardStats cardStats = GetComponent<CardStats>();
                 if (transform.parent.parent.parent.CompareTag("Player"))
                 {
-                    // Remove card from deck
+                    // 从牌组中删除卡
                     Debug.Log("Removing card from deck: " + deckController.my_deck.Name);
                     deckController.my_deck.Cards.Remove(cardStats._id);
                     deckCollection.OnDeckEdit();
                 }
                 else
                 {
-                    // Add card to selected deck if exists
+                    // 将卡添加到选定的牌组（如果存在）
                     if (deckController.my_deck.Name == "__emptyname__")
-                        Debug.Log("No selected deck to add card to !");
+                        Debug.Log("未选择牌组!");
                     else
                     {
                         int occurences = deckController.my_deck.Cards.Where(x => x.Equals(cardStats._id)).Count();
 
-                        // Hero AiCard
+                        // 英雄Card
                         if (cardStats.unique)
                         {
+                            ImageManager.setDullColor(GetComponent<Image>());
                             if (occurences > 0)
                             {
                                 Debug.Log("Cannot add hero card to deck, already contains: " + occurences);
+                                ImageManager.setDullColor(GetComponent<Image>());
                                 return;
                             }
                         }
 
-                        // Normal Unit or Special AiCard
+                        // 单位卡和特殊卡每张数量不能大于3
                         if (!cardStats.unique)
                         {
                             if (occurences >= 3)
                             {
+                                ImageManager.setDullColor(GetComponent<Image>());
                                 Debug.Log("Cannot add card to deck, already contains: " + occurences);
                                 return;
                             }
                         }
 
-                        // If Special occurences is less than 3, check total specials count
+                        //特殊卡总数不能大于10
                         if (cardStats.faction == "Special")
                         {
                             int specialsOcc = deckController.GetSpecialsOccurence(deckController.my_deck);
+                            if(specialsOcc == 9)
+                            {
+                                foreach (Transform child in this.transform.parent.transform)
+                                {
+                                    ImageManager.setDullColor(child.GetComponent<Image>());
+                                }
+                            }
                             if (specialsOcc >= 10)
                             {
                                 Debug.Log("Cannot add special card to deck, deck already contains " + specialsOcc + " specials.");
@@ -97,7 +107,7 @@ public class CCardManager : MonoBehaviour, IPointerClickHandler
                             }
                         }
 
-                        // If all checks don't match, add the card to deck
+                        //当所有条件都满足时，添加卡片到牌堆
                         deckController.my_deck.Cards.Add(cardStats._id);
                         deckCollection.OnDeckEdit();
                     }

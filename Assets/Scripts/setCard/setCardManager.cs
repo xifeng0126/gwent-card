@@ -174,52 +174,6 @@ public class setCardManager : MonoBehaviour
     }
 
 
-    //public override void OnJoinRandomFailed(short returnCode, string message)
-    //{
-    //    PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 2 });
-    //}
-    //public override void OnJoinedRoom()
-    //{
-    //    Debug.Log("加入成功");
-    //}
-
-    //public const byte MoveUnitsToTargetPositionEventCode = 1;
-    //public void SendCard()
-    //{
-
-    //    object[] content=new object[1];
-    //    int i = northernCards[0].id;
-    //    RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; 
-    //    PhotonNetwork.RaiseEvent(MoveUnitsToTargetPositionEventCode, i, raiseEventOptions, SendOptions.SendReliable);
-    //    Debug.Log("发送成功");
-    //}
-    //public override void OnConnectedToMaster()
-    //{
-    //    Debug.Log("连接成功");
-    //    PhotonNetwork.JoinRandomRoom();
-    //}
-
-    //private void OnEnable()
-    //{
-    //    PhotonNetwork.AddCallbackTarget(this);
-    //}
-
-    //private void OnDisable()
-    //{
-    //    PhotonNetwork.RemoveCallbackTarget(this);
-    //}
-    //public void OnEvent(EventData photonEvent)
-    //{
-    //    Debug.Log("接收成功");
-    //    byte eventCode = photonEvent.Code;
-    //    Debug.Log(eventCode);
-    //    if (eventCode == MoveUnitsToTargetPositionEventCode)
-    //    {
-    //        Card card = DBmanager.selectCardById((int)photonEvent.CustomData);
-    //        Debug.Log(card.name);
-    //    }
-    //}
-
     void OnApplicationQuit()
     {
         DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));

@@ -7,25 +7,24 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.SceneManagement;
 
-public enum BattleState { START, PLAYERTURN, ENEMYTURN, ROUNDOVER, WON, LOST, DRAW }
+public enum BattleState { START, PLAYERTURN, ENEMYTURN, ROUNDOVER, WON, LOST, DRAW }//战场状态
 
 public class SceneController : MonoBehaviour
 {
     public BattleState battleState;
 
-    public GameObject PostGame;
+    public GameObject PostGame;//游戏结算
     public GameObject CardPrefab;
     public GameObject WeatherField;
 
     public TextAsset CardsDatabase;
-    //public TextAsset PlayerDeck;
     public string PlayerDeck;
     public TextAsset EnemyDeck;
 
     public GameObject PlayerField;
     public GameObject EnemyField;
 
-    [HideInInspector] // List of all cards (each card has unique stats)
+    [HideInInspector]
     public List<AiCard> allCards;
 
     public MainInfo PlayerInfo;
@@ -35,7 +34,7 @@ public class SceneController : MonoBehaviour
     public GameObject TurnPicker;
     public GameObject Panel;
     public GameObject PassBtn;
-    // Medic related
+    // 技能相关
     public GameObject hiderObject;
     public GameObject selectedCard;
     public List<int> weatherList;
@@ -43,7 +42,7 @@ public class SceneController : MonoBehaviour
     public bool randomMedic;
     public bool disableLeader;
     public bool swapActivated;
-
+    public GameObject notice;
     private AIManager AIManager;
 
     private void Start()
@@ -56,9 +55,8 @@ public class SceneController : MonoBehaviour
 
         Debug.Log("AiDeck path from scene controller: " + PlayerDeck);
         PlayerInfo.Name = "Player";
-        EnemyInfo.Name = "Opponent";
+        EnemyInfo.Name = "AI";
 
-        // Initialize AI
         AIManager = GetComponent<AIManager>();
 
         // Setup the battle
@@ -67,18 +65,18 @@ public class SceneController : MonoBehaviour
         SetupBattle();
 
         Debug.Log("Waiting for all players de redraw cards: ");
-
-        // TODO: Replace with a proper FirstTurnPicker() method which takes Scoiatel faction in mind
         StartCoroutine(FirstTurnPicker());
+        MessageController.ShowMessage("舍弃两张牌并重新抽取，空格键跳过换牌阶段", notice);
     }
 
     void Update()
     {
         if (battleState == BattleState.START)
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("Player has skipped cards exchanging !");
+                Debug.Log("用户已跳过换牌阶段!");
+                Debug.Log("用户已跳过换牌阶段!");
                 PlayerInfo.CanExchange = false;
             }
         }
@@ -128,28 +126,26 @@ public class SceneController : MonoBehaviour
     }
 
     //----------------------------------------------BATTLE STATES HANDLING---------------------------------------------------//
-    // On Battle Start: Draw 10 cards then change two cards or not at all
+    //抽十张卡并换两张
     private void SetupBattle()
     {
-        // Initialize all of the card infos
+        // 获取所有卡牌
         CardsDB cards_db = JsonUtility.FromJson<CardsDB>(CardsDatabase.text);
         allCards = cards_db.Cards;
 
-        // Setup Player Info
+        //建立玩家牌组信息
         AiDeck myDeck = JsonUtility.FromJson<AiDeck>(File.ReadAllText(PlayerDeck));
-        // TODO: Name
         // TODO: Avatar
 
-        // Setup Enemy Info
+        //建立AI牌组信息
         AiDeck oppDeck = JsonUtility.FromJson<AiDeck>(EnemyDeck.text);
-        // TODO: Name
         // TODO: Avatar
 
         PrepareField(myDeck, PlayerInfo.HandList, true);
         PrepareField(oppDeck, EnemyInfo.HandList, false);
     }
 
-    // Prepares the field for the first time
+
     private void PrepareField(AiDeck deck, List<int> hand_list, bool is_player_deck)
     {
         List<int> deck_list;
@@ -184,20 +180,12 @@ public class SceneController : MonoBehaviour
         if (deck.Leader == 57)
             DrawCards(1, deck_list, hand_list, deck_back, is_player_deck);
 
-        // Add the top 10 Cards to the Player hand
+        // 玩家抽取10张卡
         DrawCards(10, deck_list, hand_list, deck_back, is_player_deck);
-        Debug.Log("Double click on a card to redraw or right click to skip");
-        // Called from any card in hand on double click
-
-        // DEVONLY:
-        //EnemyInfo.CloseList = new List<int> { 18, 19, 20, 94, 94, 94, 126, 128, 129, 127, 125, 77, 83 };
-        //EnemyInfo.RangeList = new List<int> { 71, 96, 95, 71};
-        //EnemyInfo.SiegeList = new List<int> { 11, 11, 4, 28 };
-        //PlayerInfo.CloseList = new List<int> { 138, 29, 138 };
-        //PlayerInfo.RangeList = new List<int> { 31, 5, 13 };
+        MessageController.ShowMessage("舍弃两张卡牌重新抽取，空格键跳过");
     }
 
-    private void ManageOutcome()
+    private void ManageOutcome()//处理一轮结束后的胜负结果
     {
         battleState = BattleState.ROUNDOVER;
         int player_total = GetTotalScore(true, "all");
@@ -219,7 +207,7 @@ public class SceneController : MonoBehaviour
         }
         else if (enemy_total == player_total)
         {
-            // Draw //-------------Nilfgaard: Automatically win the round that ends in a draw--------------//
+            // 考虑NF阵营平局效果
             if (PlayerInfo.Faction == "NF" && EnemyInfo.Faction != "NF")
             {
                 EnemyInfo.Lives--;
@@ -230,7 +218,7 @@ public class SceneController : MonoBehaviour
                 PlayerInfo.Lives--;
                 round_winner = "enemy";
             }
-            else // Both Nilfgaard or both are not Nilfgaard
+            else //都是NF阵营或者都不是NF阵营
             {
                 PlayerInfo.Lives--;
                 EnemyInfo.Lives--;
@@ -557,7 +545,6 @@ public class SceneController : MonoBehaviour
     {
         if (EnemyInfo.CanExchange)
         {
-            // Initialize AI (first turn only)
             AIManager.AIInitialize();
             AIManager.AIExchangeCards();
         }
@@ -567,16 +554,12 @@ public class SceneController : MonoBehaviour
         {
             yield return null;
         }
-
-        //------------Scoia'tel: Player with this deck chooses who begins each round-------------//
         if (PlayerInfo.Faction == "SC" && EnemyInfo.Faction != "SC")
         {
-            // Show the turn picker
             TurnPicker.SetActive(true);
         }
         else if (PlayerInfo.Faction != "SC" && EnemyInfo.Faction == "SC")
         {
-            // Enemy chooses who goes first
             StartCoroutine(PlayerTurn());
         }
         else
@@ -610,21 +593,20 @@ public class SceneController : MonoBehaviour
             yield break;
         }
         battleState = BattleState.ENEMYTURN;
-        Debug.Log("Enemey Turn !");
+        Debug.Log("AI Turn !");
         yield return new WaitForSeconds(2f); // Order of this is essential
         AIManager.AIStartTurn();
-        //StartCoroutine(PlayerTurn()); Turn is started from directly place card (enemy)
     }
 
     public void CheckRoundEnd()
     {
         if (PlayerInfo.hasPassed && EnemyInfo.hasPassed)
         {
-            // Both passed, round has ended
+            //双方都pass了，回合结束
             battleState = BattleState.ROUNDOVER;
             Debug.Log("Round has ended");
 
-            // Either PrepareNextRound() or ConcludeBattle(); // Depending on Lives
+            // 
             PlayerInfo.hasPassed = false;
             EnemyInfo.hasPassed = false;
             ManageOutcome();

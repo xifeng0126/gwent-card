@@ -9,6 +9,7 @@ public class CardSelect : MonoBehaviour
     [HideInInspector]
     public SceneController controller;
 
+
     // Needs to be false if placed on the field
     public bool isSelectable;
 
@@ -51,7 +52,7 @@ public class CardSelect : MonoBehaviour
             CardStats card_stats = gameObject.GetComponent<CardDisplay>().cardStats.GetComponent<CardStats>();
             if (card_stats.faction != "Special" && !card_stats.unique && !(card_stats.ability == "leader"))
             {
-                gameObject.GetComponent<CardHover>().DestroyEffect();
+                gameObject.GetComponent<CardDiscard>().DestroyEffect();
                 controller.Decoy(card_stats._id, gameObject.tag, transform.parent.parent.name);
             }
             else

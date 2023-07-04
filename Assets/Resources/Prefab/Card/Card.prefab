@@ -447,6 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7537223417892421285}
   - component: {fileID: 7241567389265071599}
+  - component: {fileID: 2417432104909289348}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -489,3 +490,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efa105344a80a4a4294e1b11cb1d8606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  card:
+    id: 0
+    name: 
+    image: 
+    number: 0
+    position: 
+    camp: 
+    skill1: 0
+    skill2: 0
+  available: 0
+--- !u!114 &2417432104909289348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528137286084800890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8beb07a84958654481f27bc170118bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BigImage: {fileID: 3548573656570525002, guid: 7dfb5bb69400ce64c98ce63e5d106a06, type: 3}
+  BigEffect: {fileID: 7950955659952426932, guid: 138f3ad3c25037b43b2aeca09d6be67c, type: 3}
+  bigImage: {fileID: 0}
+  Canvas: {fileID: 0}

@@ -24,8 +24,6 @@ public class CardExchange : MonoBehaviour
 
     public void OnCardClick()
     {
-        // Essential for the first draw
-        // Check if the player can exchange cards (redraw two initially drawn cards)
         if (controller.PlayerInfo.CanExchange && gameObject.CompareTag("Player") && isExchangeable)
         {
             if (controller.PlayerInfo.CardsExchanged < 2)

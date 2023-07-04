@@ -73,7 +73,6 @@ public class CardBtn : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 {
-                    //Debug.Log("Single Click! ");
                     lastClick = Time.time;
                 }
                 break;

@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 1111442975862389340}
   - component: {fileID: 3204816754046363019}
   - component: {fileID: 1625224983910779253}
+  - component: {fileID: 3402276222573607284}
   m_Layer: 5
   m_Name: miniCard
   m_TagString: Untagged
@@ -334,6 +335,23 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3402276222573607284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5225572640111712535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8beb07a84958654481f27bc170118bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BigImage: {fileID: 3548573656570525002, guid: 7dfb5bb69400ce64c98ce63e5d106a06, type: 3}
+  BigEffect: {fileID: 7950955659952426932, guid: 138f3ad3c25037b43b2aeca09d6be67c, type: 3}
+  bigImage: {fileID: 0}
+  bigEffect: {fileID: 0}
+  Canvas: {fileID: 0}
 --- !u!1 &6724692729732806559
 GameObject:
   m_ObjectHideFlags: 0

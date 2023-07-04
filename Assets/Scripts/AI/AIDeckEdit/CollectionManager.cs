@@ -24,7 +24,7 @@ public class CollectionManager : MonoBehaviour
 
     public List<Image> currentSprites;
     public List<Sprite> idleSprites;
-    public List<Sprite> selectedSprites;
+    public List<Sprite> selectedSprites;//选中的图片
 
     [HideInInspector]
     public List<AiCard> CardsToDisplay;
@@ -34,9 +34,9 @@ public class CollectionManager : MonoBehaviour
     IEnumerator Start()
     {
         ClearCardsArea();
-        yield return new WaitForSeconds(0.3f); // To make sure DeckController starts first
+        yield return new WaitForSeconds(0.3f); //确保 DeckController 首先启动
 
-        // Collection Cards or player deck
+        // 收藏卡或玩家牌组
         if (transform.CompareTag("Player"))
         {
             LoadFromDeck();
@@ -47,7 +47,7 @@ public class CollectionManager : MonoBehaviour
         SetCardsArea(UnitMergerHelper(faction, "all"));
     }
 
-    // Reference: Menu Buttons
+    // 卡牌类型点击事件
     public void HandleClick(int index)
     {
         if (selectedTab != index)
@@ -100,7 +100,7 @@ public class CollectionManager : MonoBehaviour
                 break;
         }
 
-        // GAME: Instantiated Cards
+        // 实例化卡牌
         ManageCardsArea(selected_row, resetScroll);
     }
 
@@ -128,10 +128,6 @@ public class CollectionManager : MonoBehaviour
         ClearCardsArea();
         foreach (AiCard card in cards_list)
         {
-            // Bovine defense force (cannot add to deck, only // TODO: (SceneController) called with cow)
-            if (card._id == 9) { continue; }
-            else
-            {
                 GameObject instantiatedCard = Instantiate(CCardPrefab);
                 instantiatedCard.name = card._id.ToString();
                 instantiatedCard.GetComponent<CardStats>().name = card.name;
@@ -142,10 +138,8 @@ public class CollectionManager : MonoBehaviour
                 instantiatedCard.GetComponent<CardStats>().strength = card.strength;
                 instantiatedCard.GetComponent<CardStats>().row = card.row;
                 instantiatedCard.GetComponent<CardStats>().ability = card.ability;
-
                 instantiatedCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Cards/List/591x380/" + card._id);
                 instantiatedCard.transform.SetParent(cardsArea.transform, false);
-            }
         }
     }
 
@@ -193,10 +187,10 @@ public class CollectionManager : MonoBehaviour
         }
     }
 
-    private List<AiCard> UnitMergerHelper(string fc, string rw, bool ishero = false) // faction | row (to avoid global variables confusion)
+    private List<AiCard> UnitMergerHelper(string fc, string rw, bool ishero = false) // 阵营、单位类型、是否英雄
     {
         List<AiCard> returned_list;
-        if (toggleBtn.isOn)
+        if (toggleBtn.isOn)//展示中立卡牌
         {
             returned_list = deckController.MergedList(
             deckController.GetUnitCards(CardsToDisplay, fc, rw, ishero),
