@@ -19,6 +19,8 @@ public class AudioManager : MonoBehaviour
     //AudioSource组件
     private AudioSource audioSource;
 
+    private bool video = false;
+
     //-----------------------------------------------------
 
     void Start()
@@ -50,7 +52,7 @@ public class AudioManager : MonoBehaviour
             canPlayAudio = false;
         }
 
-        if (!audioSource.isPlaying)
+        if (!audioSource.isPlaying&&!video)
         {
             playingIndex++;
 
@@ -70,6 +72,22 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = audioGroup[playingIndex];
         audioSource.Play();
     }
+    
+    public void stopPlay()
+    {
+        canPlayAudio = false;
+        video = true;
+        audioSource.Stop();
+    }
+
+    public void startPaly()
+    {
+        video = false;
+        PlayAudio();
+    }
+
+
+
 
     //-----------------------------------------------------
 }
