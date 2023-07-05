@@ -8,6 +8,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -91,6 +92,8 @@ public class FightManager : MonoBehaviour, IOnEventCallback
     public List<GameObject> tableCards;  //场上的卡牌
     public GameObject myBack;
     public GameObject otherBack;
+    public GameObject mypass;
+    public GameObject otherpass;
 
 
     public int PartGame;  //当为2时开始一小局
@@ -139,7 +142,29 @@ public class FightManager : MonoBehaviour, IOnEventCallback
         int playerNum = PhotonNetwork.PlayerList.Length;
         waitPlayer(playerNum);
 
-        //Timer.Update();
+        if (MyGiveup)
+        {
+            if (!mypass.activeSelf)
+                mypass.SetActive(true);
+        }
+        if (!MyGiveup)
+        {
+            if (mypass.activeSelf)
+                mypass.SetActive(false);
+        }
+
+        if (OtherGiveup)
+        {
+            if(!otherpass.activeSelf)
+                otherpass.SetActive(true);
+        }
+
+        if (!OtherGiveup)
+        {
+            if (otherpass.activeSelf) ;
+            otherpass.SetActive(false);
+        }
+
     }
     void OnApplicationQuit()
     {
@@ -973,7 +998,6 @@ public class FightManager : MonoBehaviour, IOnEventCallback
 
     public void showRound()
     {
-        //Debug.Log("showRound");
         if (Myplayer_id == gameflag)
         {
             roundPanel.SetActive(true);
@@ -996,7 +1020,6 @@ public class FightManager : MonoBehaviour, IOnEventCallback
             setHandcardDisabled();
             GamePanel.transform.Find("giveupBtn").gameObject.SetActive(false);
         }
-        //showHandCard();
         CalculateAttackNum();
     }
     public void changeGameFlag()

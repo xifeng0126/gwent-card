@@ -108,4 +108,12 @@ public class lobbyManager : MonoBehaviourPunCallbacks
     {
         DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));
     }
+    
+    public void OnQuitClick()
+    {
+        PhotonNetwork.LoadLevel("Load");
+        DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));
+        PhotonNetwork.Disconnect();
+
+    }
 }

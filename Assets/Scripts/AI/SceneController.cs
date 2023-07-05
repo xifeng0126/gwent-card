@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, ROUNDOVER, WON, LOST, DRAW }//战场状态
 
@@ -31,6 +32,7 @@ public class SceneController : MonoBehaviour
     public MainInfo EnemyInfo;
 
     // In-play related
+    public GameObject roundPanel;
     public GameObject TurnPicker;
     public GameObject Panel;
     public GameObject PassBtn;
@@ -98,7 +100,6 @@ public class SceneController : MonoBehaviour
         }
 
 
-        // TODO: Change image, a bit lame (grass pass crown)
         if (PlayerInfo.hasPassed)
         {
             if (!PlayerField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.activeSelf)
@@ -120,9 +121,6 @@ public class SceneController : MonoBehaviour
             if (EnemyField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.activeSelf)
                 EnemyField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.SetActive(false);
         }
-        //Detected everywhere in the game(even if there is an onclick attached to a gameobject)
-        //if (Input.GetMouseButtonDown(0))
-        //    Debug.Log("Pressed primary button
     }
 
     //----------------------------------------------BATTLE STATES HANDLING---------------------------------------------------//
@@ -564,7 +562,6 @@ public class SceneController : MonoBehaviour
         }
         else
         {
-            // TODO: Rock paper scissors maybe ?
             int picker = new System.Random().Next(0, 2);
             if (picker == 0)
                 StartCoroutine(EnemyTurn());
@@ -581,8 +578,8 @@ public class SceneController : MonoBehaviour
             yield break;
         }
         yield return new WaitForSeconds(1f);
-        Debug.Log("Player Turn !");
         battleState = BattleState.PLAYERTURN;
+        ShowRound();
     }
 
     public IEnumerator EnemyTurn()
@@ -593,7 +590,7 @@ public class SceneController : MonoBehaviour
             yield break;
         }
         battleState = BattleState.ENEMYTURN;
-        Debug.Log("AI Turn !");
+        ShowRound();
         yield return new WaitForSeconds(2f); // Order of this is essential
         AIManager.AIStartTurn();
     }
@@ -620,7 +617,27 @@ public class SceneController : MonoBehaviour
             StartCoroutine(PlayerTurn());
         }
     }
-
+    public void ShowRound()
+    {
+        if(battleState == BattleState.PLAYERTURN)
+        {
+            roundPanel.SetActive(true);
+            roundPanel.transform.Find("round").GetComponent<TextMeshProUGUI>().text = "你的回合";
+            TimerManager.StartTimer(1f, () =>
+            {
+                roundPanel.SetActive(false);
+            });
+        }
+        else if(battleState == BattleState.ENEMYTURN)
+        {
+            roundPanel.SetActive(true);
+            roundPanel.transform.Find("round").GetComponent<TextMeshProUGUI>().text = "对方回合";
+            TimerManager.StartTimer(1f, () =>
+            {
+                roundPanel.SetActive(false);
+            });
+        }
+    }
     // Highlights the field based on the selected card's stats
     // And stores the highlighted field if any in a gameobject list
     public void HighlightField(CardStats card_stats, bool is_player_turn)
@@ -741,11 +758,6 @@ public class SceneController : MonoBehaviour
     // Directly places a specific card_go on a field_go
     public void DirectlyPlaceCard(GameObject card_go, GameObject field_go, bool is_player_turn)
     {
-        // The tests are to make sure the appropriate lists gets updated
-        // as well as the correct list is being passed to CreateCardObject()
-        // which instantiates all cards of a card_id list after clearing
-        // the previous children of the gameobject
-
         MainInfo my_info;
         MainInfo opp_info;
 
