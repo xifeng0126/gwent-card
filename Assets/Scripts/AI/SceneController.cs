@@ -100,7 +100,6 @@ public class SceneController : MonoBehaviour
         }
 
 
-        // TODO: Change image, a bit lame (grass pass crown)
         if (PlayerInfo.hasPassed)
         {
             if (!PlayerField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.activeSelf)
@@ -122,9 +121,6 @@ public class SceneController : MonoBehaviour
             if (EnemyField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.activeSelf)
                 EnemyField.transform.Find("Stats").Find("Total").Find("Pass").gameObject.SetActive(false);
         }
-        //Detected everywhere in the game(even if there is an onclick attached to a gameobject)
-        //if (Input.GetMouseButtonDown(0))
-        //    Debug.Log("Pressed primary button
     }
 
     //----------------------------------------------BATTLE STATES HANDLING---------------------------------------------------//
