@@ -1214,9 +1214,9 @@ public class FightManager : MonoBehaviour, IOnEventCallback
             }
             else
             {
-                Debug.Log(4);
-                Debug.Log(MygameDeck.deck_camp);
-                Debug.Log(OtherGameDeck.deck_camp);
+                //Debug.Log(4);
+                //Debug.Log(MygameDeck.deck_camp);
+                //Debug.Log(OtherGameDeck.deck_camp);
                 GamePanel.transform.Find("PartGameWin/winer").GetComponent<TextMeshProUGUI>().text = "平局";
             }
         }
@@ -1398,11 +1398,16 @@ public class FightManager : MonoBehaviour, IOnEventCallback
             if (win == 0)
             {
                 GameOver.transform.Find("win").GetComponent<TextMeshProUGUI>().text = "你赢了";
+                Texture2D texture = Resources.Load<Texture2D>("PostGame/victory");
+                Sprite sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                GameOver.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = sprite;
             }
             else
             {
                 GameOver.transform.Find("win").GetComponent<TextMeshProUGUI>().text = "你输了";
-
+                Texture2D texture = Resources.Load<Texture2D>("PostGame/defeat");
+                Sprite sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                GameOver.transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = sprite;
             }
         });
         

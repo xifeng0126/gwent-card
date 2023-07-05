@@ -58,6 +58,7 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (eventData.button == PointerEventData.InputButton.Right) return;
         // 记录鼠标点击位置与卡牌初始位置的偏移量
         offset = eventData.position - (Vector2)cardRectTransform.position;
 
@@ -126,12 +127,14 @@ public class DragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (eventData.button == PointerEventData.InputButton.Right) return;
         // 更新卡牌位置为鼠标位置加上偏移量
         cardRectTransform.position = eventData.position - offset;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (eventData.button == PointerEventData.InputButton.Right) return;
         reduceAll();
 
         // 使用RaycastAll获取鼠标释放位置下的所有UI对象
