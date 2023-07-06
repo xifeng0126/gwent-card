@@ -11,7 +11,22 @@ public class videoManager : MonoBehaviour
 
     AudioManager audioManager;
     // Start is called before the first frame update
+    void Start()
+    {
+        videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayed = PlayerPrefs.GetInt("VideoPlayed", 0) == 1;
 
+        if (!videoPlayed)
+        {
+            PlayVideo();
+            PlayerPrefs.SetInt("VideoPlayed", 1);
+            if (audioManager != null)
+                audioManager.stopPlay();
+        }
+        else
+        {
+            videoPlayer.gameObject.SetActive(false);
+        }
     void Awake()
     {
         videoPlayer = GetComponent<VideoPlayer>();
@@ -23,17 +38,7 @@ public class videoManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 播放视频，并只播放一次
-        if (!videoPlayed)
-        {
-            videoPlayer.Play();
-            videoPlayed = true;
-            //music.GetComponent<AudioManager>().stopPlay();
-            if(audioManager != null)
-                audioManager.stopPlay();
-        }
-
-        // 按下空格键时，跳过开场视频
+        // ���¿ո��ʱ������������Ƶ
         if (Input.GetKeyDown(KeyCode.Space))
         {
             videoPlayer.Stop();
@@ -43,13 +48,14 @@ public class videoManager : MonoBehaviour
                 audioManager.startPaly();
         }
     }
-    private void Start()
+
+    private void PlayVideo()
     {
-        videoPlayer.loopPointReached += OnVideoCompleted;
+        videoPlayer.Play();
     }
-    private void OnVideoCompleted(VideoPlayer vp)
+
+    private void OnDestroy()
     {
-        // 视频播放完成后执行销毁操作
-        Destroy(vp.gameObject);
+        PlayerPrefs.Save();
     }
 }
