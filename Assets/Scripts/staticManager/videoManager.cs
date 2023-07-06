@@ -8,31 +8,39 @@ public class videoManager : MonoBehaviour
     public GameObject music;
     private VideoPlayer videoPlayer;
     private bool videoPlayed;
+
+    AudioManager audioManager;
     // Start is called before the first frame update
 
     void Awake()
     {
         videoPlayer = GetComponent<VideoPlayer>();
         videoPlayed = false;
+        audioManager = GameObject.FindGameObjectsWithTag("AudioManager")[0].GetComponent<AudioManager>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // ²¥·ÅÊÓÆµ£¬²¢Ö»²¥·ÅÒ»´Î
+        // æ’­æ”¾è§†é¢‘ï¼Œå¹¶åªæ’­æ”¾ä¸€æ¬¡
         if (!videoPlayed)
         {
             videoPlayer.Play();
             videoPlayed = true;
             //music.GetComponent<AudioManager>().stopPlay();
+            if(audioManager != null)
+                audioManager.stopPlay();
         }
 
-        // °´ÏÂ¿Õ¸ñ¼üÊ±£¬Ìø¹ı¿ª³¡ÊÓÆµ
+        // æŒ‰ä¸‹ç©ºæ ¼é”®æ—¶ï¼Œè·³è¿‡å¼€åœºè§†é¢‘
         if (Input.GetKeyDown(KeyCode.Space))
         {
             videoPlayer.Stop();
             videoPlayer.gameObject.SetActive(false);
             //music.GetComponent<AudioManager>().startPaly();
+            if (audioManager != null)
+                audioManager.startPaly();
         }
     }
     private void Start()
@@ -41,7 +49,7 @@ public class videoManager : MonoBehaviour
     }
     private void OnVideoCompleted(VideoPlayer vp)
     {
-        // ÊÓÆµ²¥·ÅÍê³ÉºóÖ´ĞĞÏú»Ù²Ù×÷
+        // è§†é¢‘æ’­æ”¾å®Œæˆåæ‰§è¡Œé”€æ¯æ“ä½œ
         Destroy(vp.gameObject);
     }
 }
