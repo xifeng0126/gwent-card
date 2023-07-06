@@ -10,10 +10,12 @@ public class videoManager : MonoBehaviour
     private bool videoPlayed;
 
     AudioManager audioManager;
-    // Start is called before the first frame update
     void Start()
     {
         videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayed = false;
+        audioManager = GameObject.FindGameObjectsWithTag("AudioManager")[0].GetComponent<AudioManager>();
+        
         videoPlayed = PlayerPrefs.GetInt("VideoPlayed", 0) == 1;
 
         if (!videoPlayed)
@@ -27,18 +29,14 @@ public class videoManager : MonoBehaviour
         {
             videoPlayer.gameObject.SetActive(false);
         }
-    void Awake()
-    {
-        videoPlayer = GetComponent<VideoPlayer>();
-        videoPlayed = false;
-        audioManager = GameObject.FindGameObjectsWithTag("AudioManager")[0].GetComponent<AudioManager>();
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // ���¿ո��ʱ������������Ƶ
+
+
+        // 按下空格键时，跳过开场视频
         if (Input.GetKeyDown(KeyCode.Space))
         {
             videoPlayer.Stop();
@@ -56,6 +54,7 @@ public class videoManager : MonoBehaviour
 
     private void OnDestroy()
     {
+
         PlayerPrefs.Save();
     }
 }
