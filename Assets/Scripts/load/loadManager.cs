@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,19 +18,66 @@ public class loadManager : MonoBehaviourPunCallbacks
     //public GameObject miusic;
 
 
+    TMP_InputField m_InputField1;
+    TMP_InputField m_InputField2;
+
     // Start is called before the first frame update
     void Start()
     {
         //Lobby.SetActive(false);
         SignIn.SetActive(true);
         SignUp.SetActive(false);
-       // miusic.GetComponent<AudioManager>().PlayAudio();
+
+        m_InputField1 = SignIn.transform.Find("password").GetComponent<TMP_InputField>();
+        m_InputField2 = SignUp.transform.Find("password").GetComponent<TMP_InputField>();
+        m_InputField1.onValueChanged.AddListener(OnInputFieldValueChang1);
+        m_InputField2.onValueChanged.AddListener(OnInputFieldValueChang2);
+        // miusic.GetComponent<AudioManager>().PlayAudio();
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    private void OnInputFieldValueChang1(string inputInfo)
+    {
+        Regex reg = new Regex("^[A-Za-z0-9]+$");
+        if (reg.IsMatch(inputInfo))
+        {
+            m_InputField1.text = inputInfo;
+        }
+        else
+        {
+            if (m_InputField1.text == "")
+            {
+                m_InputField1.text = "";
+            }
+            else
+            {
+                m_InputField1.text = inputInfo.Substring(0, inputInfo.Length - 1);
+            }
+        }
+    }
+    private void OnInputFieldValueChang2(string inputInfo)
+    {
+        Regex reg = new Regex("^[A-Za-z0-9]+$");
+        if (reg.IsMatch(inputInfo))
+        {
+            m_InputField2.text = inputInfo;
+        }
+        else
+        {
+            if (m_InputField2.text == "")
+            {
+                m_InputField2.text = "";
+            }
+            else
+            {
+                m_InputField2.text = inputInfo.Substring(0, inputInfo.Length - 1);
+            }
+        }
     }
 
     public void OnSingInClick() //点击登录按钮

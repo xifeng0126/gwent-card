@@ -8,7 +8,6 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Collections;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -232,7 +231,7 @@ public class FightManager : MonoBehaviour, IOnEventCallback
                 PartGame++;
                 if (PartGame == 2)    //后续修改
                 {
-                    Debug.Log("开始游戏");
+                    //Debug.Log("开始游戏");
                     startPartGame();
                 }
             }
@@ -1151,7 +1150,7 @@ public class FightManager : MonoBehaviour, IOnEventCallback
     }
     public void setHandcardEnabled()
     {
-        Debug.Log("setHandcardEnabled");
+        //Debug.Log("setHandcardEnabled");
         foreach (Transform child in GamePanel.transform.Find("MyHandCards").transform)
         {
             child.GetComponent<DragHandler>().enabled = true;

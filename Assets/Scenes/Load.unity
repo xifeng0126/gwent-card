@@ -903,8 +903,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -1070,7 +1070,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5BC6\u7801"
+  m_text: "\u5BC6\u7801\u53EA\u80FD\u4E3A\u5B57\u6BCD\u6570\u5B57"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bf59b9aa981111c4697b74ad5c08554b, type: 2}
   m_sharedMaterial: {fileID: -3488142905000138876, guid: bf59b9aa981111c4697b74ad5c08554b, type: 2}
