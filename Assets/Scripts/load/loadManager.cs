@@ -33,6 +33,8 @@ public class loadManager : MonoBehaviourPunCallbacks
         m_InputField1.onValueChanged.AddListener(OnInputFieldValueChang1);
         m_InputField2.onValueChanged.AddListener(OnInputFieldValueChang2);
         // miusic.GetComponent<AudioManager>().PlayAudio();
+        PlayerPrefs.SetInt("VideoPlayed", 0);
+        PlayerPrefs.Save();
     }
 
     // Update is called once per frame

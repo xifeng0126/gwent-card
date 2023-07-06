@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Photon.Pun;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, ROUNDOVER, WON, LOST, DRAW }//战场状态
 
@@ -45,6 +46,7 @@ public class SceneController : MonoBehaviour
     public bool disableLeader;
     public bool swapActivated;
     public GameObject notice;
+    public GameObject video;
     private AIManager AIManager;
 
     private void Start()
@@ -150,6 +152,7 @@ public class SceneController : MonoBehaviour
         Sprite deck_back;
         MainInfo info;
 
+        PlayerField.transform.Find("Stats").Find("TextInfo").Find("Name").GetComponent<TextMeshProUGUI>().text = DBmanager.selectPlayerById(Convert.ToInt32(PhotonNetwork.AuthValues.UserId)).player_name;
         deck_back = Resources.Load<Sprite>("Cards/Back/" + deck.Faction);
         deck_list = GenerateDecklist(deck);
         deck_list = ShuffleList(deck_list);
@@ -448,6 +451,9 @@ public class SceneController : MonoBehaviour
                 break;
             case "WON":
                 battleState = BattleState.WON;
+                PlayerPrefs.SetInt("VideoPlayed", 0);
+                PlayerPrefs.Save();
+                video.SetActive(true);
                 PostGame.SetActive(true);
                 PostGame.GetComponent<PostGameManager>().ShowWin();
                 break;

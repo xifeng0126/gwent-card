@@ -21,5 +21,8 @@ public class gameManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         DBmanager.exitPlayer(Convert.ToInt32(PhotonNetwork.AuthValues.UserId));
+        PlayerPrefs.SetInt("VideoPlayed", 0);
+        PlayerPrefs.Save();
+
     }
 }
