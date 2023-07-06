@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 控制所有音乐的管理类
-/// </summary>
 public class AudioManager : MonoBehaviour
 {
     //将要轮流播放的音乐组
@@ -41,13 +38,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    //-----------------------------------------------------
 
     void Update()
     {
         if (canPlayAudio)
         {
-            PlayAudio();
+            PlayAudio();   
 
             canPlayAudio = false;
         }
@@ -65,7 +61,6 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    //-----------------------------------------------------
 
     public void PlayAudio()
     {
@@ -86,8 +81,4 @@ public class AudioManager : MonoBehaviour
         PlayAudio();
     }
 
-
-
-
-    //-----------------------------------------------------
 }
